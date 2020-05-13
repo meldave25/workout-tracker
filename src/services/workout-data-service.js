@@ -95,10 +95,10 @@ export class WorkoutDataService {
                 
                 
                 data.Items.forEach(function(w) {
-                    //console.log(JSON.stringify(w));
+                    
                     document.getElementById('textarea').innerHTML += "\n" + w.emailAddress + ": " + w.WorkoutDate;
                     
-                    //let workout = application.dataService.loadWorkout(w);
+                    
                     application.dataService.workouts.push(w);
                     //console.log(application.dataService.workouts);
                     

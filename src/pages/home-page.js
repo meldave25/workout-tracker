@@ -12,6 +12,36 @@ export class HomePage extends Page {
 
     constructor() {
         super('Home');
+
+       
+    }
+
+    createDataTable(headers, homepageObj) {
+
+        var dynamodb = new AWS.DynamoDB();
+        var docClient = new AWS.DynamoDB.DocumentClient();
+        var tableData = [];
+
+        try {
+            var params = {
+                TableName: "Workouts"
+            };
+
+        docClient.scan(params,onScan);
+
+        function onScan(err, data) {
+            if (err) {
+                document.getElementById('textarea').innerHTML += "Unable to scan. Error: " + "\n" + JSON.stringify(err, undefined, 2);
+            } else {
+                 
+
+                 let dt = new DataTable(headers,data.Items);
+                 dt.appendToElement(homepageObj);
+            }
+     }
+     } catch (error) {
+            console.error(error);
+        }
     }
 
     createElement() {
@@ -70,33 +100,10 @@ export class HomePage extends Page {
             
             
         });
-            
+         
+        let headers ="emailAddress WorkoutDate squats steps pullUps points".split(' ');
+        this.createDataTable(headers, this.element);
 
-        let headers ="emailAddress workoutDate squats steps pullUps points".split(' ');
-
-        var dynamodb = new AWS.DynamoDB();
-        var docClient = new AWS.DynamoDB.DocumentClient();
-        
-        async function createDataTable(){
-            try {
-                var params = {
-                    TableName: "Workouts"
-                };
-                var result = await dynamodb.scan(params).promise()
-                let dt = new DataTable(headers, result);
-                dt.appendToElement(this.element);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        createDataTable();
-        
-        
-
-           
-        
-       
 
     }
 
@@ -108,4 +115,8 @@ export class HomePage extends Page {
         let dt = new DataTable(headers, application.dataService.workouts);
         dt.appendToElement(this.element);
     }
+
+    
+    
+
 }

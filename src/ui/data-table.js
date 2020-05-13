@@ -1,5 +1,5 @@
 import {BaseElement} from './base-element.js';
-import {application} from '../app.js';
+//import {application} from '../app.js';
 
 export class DataTable extends BaseElement {
 
@@ -20,31 +20,28 @@ export class DataTable extends BaseElement {
         
         let trTags = '';
         
-        //console.log(this.data[0]);
-        const arr = this.data;
-        arr.forEach((val)=>{
-            for(let [key,value] of Object.entries(val)) {
-                console.log(`Value of ${key} is ${value}`);
-            }
-        });
-        //application.dataService.workouts.forEach(function(row){console.log(row.emailAddress); });
-        for (let row of this.data){
-            console.log(row);
-            trTags += '<tr>';
-            let tdTags = '';
-            for(let property of this.headers) {
-                let field = row[property];;
-                //console.log("property: " + property + ",field: "+ field);
-                trTags += `<td class="mdl-data-table__cell--non-numeric">
+        
+        
+        this.data.forEach((val)=>{
+           
+                
+                trTags += '<tr>';
+                for(let property of this.headers){
+                    let field = val[property];
+                    trTags += `<td class="mdl-data-table__cell--non-numeric">
                                 ${field}
                             </td>
                             
                             `;
-            }
+                }
+                
+                trTags += '</tr>';
+            
+        });
         
-            trTags += '</tr>';
-            }
         return `
+        <br/>
+        <br/>
         <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
   <thead>
     ${thTags}
