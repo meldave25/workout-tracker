@@ -13,7 +13,7 @@ export class HomePage extends Page {
     constructor() {
         super('Home');
 
-       
+        
     }
 
     createDataTable(headers, homepageObj) {
@@ -78,7 +78,7 @@ export class HomePage extends Page {
         b.element.click(function() {
             //console.log(document.getElementById(txt.txtID).value);
             let dateObject = new Date();
-            let today = dateObject.getUTCDate().toString() + "-"+ (dateObject.getMonth()+1).toString() + "-" + dateObject.getUTCFullYear().toString();
+            let today = (dateObject.getMonth()+1).toString() + "-" + dateObject.getUTCDate().toString() + "-"+ dateObject.getUTCFullYear().toString();
             let w = new Workout("Melvin David",today);
             if (radSquats.element.hasClass("is-checked")){
                 console.log("Inside squats");
@@ -99,6 +99,45 @@ export class HomePage extends Page {
             application.dataService.addWorkout(w);
             
             
+        });
+
+        let txtRemoveUser = new TextBox('txtRemoveUser');
+        txtRemoveUser.setStyleString(styleString);
+        txtRemoveUser.appendToElement(this.element);
+        
+
+        let btnRemoveUser = new Button('Remove User');
+        btnRemoveUser.setStyleString(styleString);
+        btnRemoveUser.appendToElement(this.element);
+        btnRemoveUser.element.click(function(){
+            var docClient = new AWS.DynamoDB.DocumentClient();
+
+            var table = "Workouts";
+            var emailAddress = document.getElementById(txtRemoveUser.txtID).value;
+            
+        
+            var params = {
+                TableName:table,
+                Key:{
+                    "emailAddress":emailAddress,
+                    "WorkoutDate": "12-5-2020"
+                   
+                }
+                //ConditionExpression:"points <= :val",
+                //ExpressionAttributeValues: {
+                //    ":val": 100
+                //}
+            };
+        
+            docClient.delete(params, function(err, data) {
+                if (err) {
+                    console.log(err);
+                    //document.getElementById('textarea').innerHTML = "The conditional delete failed: " + "\n" + JSON.stringify(err, undefined, 2);
+                } else {
+                    console.log(JSON.stringify(data));
+                    //document.getElementById('textarea').innerHTML = "The conditional delete succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+                }
+            });
         });
          
         let headers ="emailAddress WorkoutDate squats steps pullUps points".split(' ');
