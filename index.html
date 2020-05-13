@@ -19,64 +19,64 @@
                     secretAccessKey: "fakeSecretAccessKey"
                 });
     
-                var dynamodb = new AWS.DynamoDB();
-                var docClient = new AWS.DynamoDB.DocumentClient();
+//                 var dynamodb = new AWS.DynamoDB();
+//                 var docClient = new AWS.DynamoDB.DocumentClient();
 
-                function createMovies() {
-                    var params = {
-                            TableName : "Workouts",
-                            KeySchema: [
-                               { AttributeName: "emailAddress", KeyType: "HASH"},
-                               { AttributeName: "WorkoutDate", KeyType: "RANGE" }
-                            ],
-                            AttributeDefinitions: [
-                               { AttributeName: "emailAddress", AttributeType: "S" },
-                               { AttributeName: "WorkoutDate", AttributeType: "S" }
-                             ],
-                            ProvisionedThroughput: {
-                            ReadCapacityUnits: 5,
-                            WriteCapacityUnits: 5
-                             }           
-                        };
+//                 function createMovies() {
+//                     var params = {
+//                             TableName : "Workouts",
+//                             KeySchema: [
+//                                { AttributeName: "emailAddress", KeyType: "HASH"},
+//                                { AttributeName: "WorkoutDate", KeyType: "RANGE" }
+//                             ],
+//                             AttributeDefinitions: [
+//                                { AttributeName: "emailAddress", AttributeType: "S" },
+//                                { AttributeName: "WorkoutDate", AttributeType: "S" }
+//                              ],
+//                             ProvisionedThroughput: {
+//                             ReadCapacityUnits: 5,
+//                             WriteCapacityUnits: 5
+//                              }           
+//                         };
                 
     
-                dynamodb.createTable(params, function(err, data) {
-            if (err) {
-                document.getElementById('textarea').innerHTML = "Unable to create table: " + "\n" + JSON.stringify(err, undefined, 2);
-            } else {
-                document.getElementById('textarea').innerHTML = "Created table: " + "\n" + JSON.stringify(data, undefined, 2);
-            }
-        });
-                } 
+//                 dynamodb.createTable(params, function(err, data) {
+//             if (err) {
+//                 document.getElementById('textarea').innerHTML = "Unable to create table: " + "\n" + JSON.stringify(err, undefined, 2);
+//             } else {
+//                 document.getElementById('textarea').innerHTML = "Created table: " + "\n" + JSON.stringify(data, undefined, 2);
+//             }
+//         });
+//                 } 
                 
-                function createItem() {
-                        var params = {
-                                TableName :"Workouts",
-                                 Item:{
-                                "emailAddress": "melvin@gmail.com",
-                                "WorkoutDate": "05-08-2020"
+//                 function createItem() {
+//                         var params = {
+//                                 TableName :"Workouts",
+//                                  Item:{
+//                                 "emailAddress": "melvin@gmail.com",
+//                                 "WorkoutDate": "05-08-2020"
                                  
-                                }
-                            };
-                        docClient.put(params, function(err, data) {
-                       if (err) {
-                               document.getElementById('textarea').innerHTML = "Unable to add item: " + "\n" + JSON.stringify(err, undefined, 2);
-                            } else {
-                               document.getElementById('textarea').innerHTML = "PutItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
-                           }
-                        });
-                }
-                async function scanForResults(){
-    try {
-        var params = {
-            TableName: "Workouts"
-        };
-        var result = await dynamodb.scan(params).promise()
-        console.log(JSON.stringify(result))
-    } catch (error) {
-        console.error(error);
-    }
-}
+//                                 }
+//                             };
+//                         docClient.put(params, function(err, data) {
+//                        if (err) {
+//                                document.getElementById('textarea').innerHTML = "Unable to add item: " + "\n" + JSON.stringify(err, undefined, 2);
+//                             } else {
+//                                document.getElementById('textarea').innerHTML = "PutItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+//                            }
+//                         });
+//                 }
+//                 async function scanForResults(){
+//     try {
+//         var params = {
+//             TableName: "Workouts"
+//         };
+//         var result = await dynamodb.scan(params).promise()
+//         console.log(JSON.stringify(result))
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
                 
 
             </script>
@@ -87,13 +87,13 @@
             System.import('src/app.js');
         </script>
 
-            <div>
+            <!-- <div>
             <input id="createTableButton" type="button" value="Create Table" onclick="createMovies();"></input>
             <input id="createItemButton" type="button" value="Create Item" onclick="createItem();"></input>
             <input id="listMoviesButton" type="button" value="Scan" onclick="scanForResults();"></input>
             <br/><br/>
             <textarea readonly id= "textarea" style="width:400px; height:800px"></textarea>
-            </div>
+            </div> -->
         
      </body>
 </html>
