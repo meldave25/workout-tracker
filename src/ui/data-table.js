@@ -7,6 +7,7 @@ export class DataTable extends BaseElement {
         super();
         this.headers = headers;
         this.data = data;
+        this.styleString = "";
         
     }
 
@@ -42,7 +43,7 @@ export class DataTable extends BaseElement {
         return `
         <br/>
         <br/>
-        <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+        <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style=${this.styleString}>
   <thead>
     ${thTags}
   </thead>
@@ -51,6 +52,10 @@ export class DataTable extends BaseElement {
   </tbody>
 </table>
         `
+    }
+
+    setStyleString(style){
+      this.styleString = style;
     }
 
     

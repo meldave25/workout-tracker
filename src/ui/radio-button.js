@@ -14,17 +14,17 @@ export class RadioButton extends BaseElement {
     getElementString(){
 
         if(this.checked) {
-            return `
-            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="${this.radioID}">
+            return `       
+            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="${this.radioID}" style=${this.styleString}>
       <input type="radio" id="${this.radioID}" class="mdl-radio__button" name="options" value="${this.value}" checked>
       <span class="mdl-radio__label">${this.dispName}</span>
-    </label>
+    </label> 
             `
         }
 
         else {
             return `
-        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="${this.radioID}">
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="${this.radioID}" style=${this.styleString}>
   <input type="radio" id="${this.radioID}" class="mdl-radio__button" name="options" value="${this.value}">
   <span class="mdl-radio__label">${this.dispName}</span>
 </label>

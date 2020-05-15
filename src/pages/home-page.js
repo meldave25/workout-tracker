@@ -12,12 +12,10 @@ import {DateTimePicker} from '../ui/date-time-picker.js';
 export class HomePage extends Page {
 
     constructor() {
-        super('Home');
-
-        
+        super('Home'); 
     }
 
-    createDataTable(headers, homepageObj) {
+    createDataTable(headers, homepageObj, style) {
 
         var dynamodb = new AWS.DynamoDB();
         var docClient = new AWS.DynamoDB.DocumentClient();
@@ -38,6 +36,7 @@ export class HomePage extends Page {
                  
 
                  let dt = new DataTable(headers,data.Items);
+                 dt.setStyleString(style);
                  dt.appendToElement(homepageObj);
             }
      }
@@ -55,7 +54,9 @@ export class HomePage extends Page {
         //let i = new Image('images/drone.jpeg');
         //i.appendToElement(this.element);
 
-        let styleString = 'width:300px; height: 80px;';
+        let styleString = '';
+        let btnStyleString = 'width:300px; width:80px;margin:10px';
+        let dtStyleString = 'margin:auto; width:50%';
 
         let radSquats = new RadioButton('rbSquats','Squats','1', true);
         radSquats.setStyleString(styleString);
@@ -70,12 +71,12 @@ export class HomePage extends Page {
         radPullUps.appendToElement(this.element);
         
         let txt = new TextBox('txtinput1',true);
-        txt.setStyleString(styleString);
+        //txt.setStyleString(btnStyleString);
         txt.appendToElement(this.element);
         
 
         let b = new Button('Submit');
-        b.setStyleString(styleString);
+        b.setStyleString(btnStyleString);
         b.appendToElement(this.element);
         b.element.click(function() {
             //console.log(document.getElementById(txt.txtID).value);
@@ -159,8 +160,8 @@ export class HomePage extends Page {
         let removeUserStyleString = 'width:100px; height: 80px;'
 
         let txtRemoveUser = new TextBox('txtRemoveUser');
-        txtRemoveUser.setStyleString(styleString);
-        txtRemoveUser.appendToElement(this.element);
+        //txtRemoveUser.setStyleString(btnStyleString);
+        //txtRemoveUser.appendToElement(this.element);
 
         // let dtRemoveUser = new DateTimePicker("Workout Date","dtRemoveUser");
         // dtRemoveUser.setStyleString(styleString);
@@ -169,41 +170,41 @@ export class HomePage extends Page {
         
 
         let btnRemoveUser = new Button('Remove User');
-        btnRemoveUser.setStyleString(styleString);
-        btnRemoveUser.appendToElement(this.element);
-        btnRemoveUser.element.click(function(){
-            var docClient = new AWS.DynamoDB.DocumentClient();
+        //btnRemoveUser.setStyleString(btnStyleString);
+        //btnRemoveUser.appendToElement(this.element);
+        // btnRemoveUser.element.click(function(){
+        //     var docClient = new AWS.DynamoDB.DocumentClient();
 
-            var table = "Workouts";
-            var emailAddress = document.getElementById(txtRemoveUser.txtID).value;
+        //     var table = "Workouts";
+        //     var emailAddress = document.getElementById(txtRemoveUser.txtID).value;
             
         
-            var params = {
-                TableName:table,
-                Key:{
-                    "emailAddress":emailAddress,
+        //     var params = {
+        //         TableName:table,
+        //         Key:{
+        //             "emailAddress":emailAddress,
                     
                    
-                }
-                //ConditionExpression:"points <= :val",
-                //ExpressionAttributeValues: {
-                //    ":val": 100
-                //}
-            };
+        //         }
+        //         //ConditionExpression:"points <= :val",
+        //         //ExpressionAttributeValues: {
+        //         //    ":val": 100
+        //         //}
+        //     };
         
-            docClient.delete(params, function(err, data) {
-                if (err) {
-                    console.log(err);
-                    //document.getElementById('textarea').innerHTML = "The conditional delete failed: " + "\n" + JSON.stringify(err, undefined, 2);
-                } else {
-                    console.log(JSON.stringify(data));
+        //     docClient.delete(params, function(err, data) {
+        //         if (err) {
+        //             console.log(err);
+        //             //document.getElementById('textarea').innerHTML = "The conditional delete failed: " + "\n" + JSON.stringify(err, undefined, 2);
+        //         } else {
+        //             console.log(JSON.stringify(data));
                     
-                }
-            });
-        });
+        //         }
+        //     });
+        // });
          
         let headers ="emailAddress WorkoutDate squats steps pullUps points".split(' ');
-        this.createDataTable(headers, this.element);
+        this.createDataTable(headers, this.element, dtStyleString);
 
 
     }
@@ -216,6 +217,7 @@ export class HomePage extends Page {
 
     loadDataTable(workoutArray){
         let dt = new DataTable(headers, application.dataService.workouts);
+        dt.setStyleString(dtStyleString);
         dt.appendToElement(this.element);
     }
 
