@@ -140,7 +140,7 @@ export class HomePage extends Page {
                     application.dataService.addWorkout(w);
                 }
                 else {
-                    aataService.addWorkout(w);pplication.d
+                    //application.dataService.addWorkout(w);
                 }
 
             }
