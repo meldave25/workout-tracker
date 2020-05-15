@@ -6,7 +6,8 @@ import { TextBox } from '../ui/textbox.js';
 import { RadioButton } from '../ui/radio-button.js';
 import { DataTable } from '../ui/data-table.js';
 import { Workout } from '../classes/workout.js';
-import {workouts} from '../workout-data.js';
+//import {workouts} from '../workout-data.js';
+import {DateTimePicker} from '../ui/date-time-picker.js';
 
 export class HomePage extends Page {
 
@@ -31,7 +32,8 @@ export class HomePage extends Page {
 
         function onScan(err, data) {
             if (err) {
-                document.getElementById('textarea').innerHTML += "Unable to scan. Error: " + "\n" + JSON.stringify(err, undefined, 2);
+                //document.getElementById('textarea').innerHTML += "Unable to scan. Error: " + "\n" + JSON.stringify(err, undefined, 2);
+                console.log(err);
             } else {
                  
 
@@ -79,31 +81,91 @@ export class HomePage extends Page {
             //console.log(document.getElementById(txt.txtID).value);
             let dateObject = new Date();
             let today = (dateObject.getMonth()+1).toString() + "-" + dateObject.getUTCDate().toString() + "-"+ dateObject.getUTCFullYear().toString();
+            let newSquats = 0;
+            let newSteps = 0;
+            let newPullUps = 0;
+            var currSquats = 0;
+            var currSteps = 0;
+            var currPullUps = 0;
+            
+            var docClient = new AWS.DynamoDB.DocumentClient();
+            
             let w = new Workout("Melvin David",today);
-            if (radSquats.element.hasClass("is-checked")){
-                console.log("Inside squats");
-                w.addSquats(document.getElementById(txt.txtID).value);
+            //w.squats = currSquats;
+
+            var params = {
+            TableName: 'Workouts',
+            Key: {'emailAddress': w.emailAddress}
+            };
+
+            docClient.get(params, function(err, data) {
+            if (err) {
+                console.log("Error", err);
+            } else {
+                //console.log(data.Item.squats);
+                if(data.Item != undefined){
+                    currSquats = parseInt(data.Item.squats);
+                    currSteps = parseInt(data.Item.steps);
+                    currPullUps = parseInt(data.Item.pullUps);
+                    
+                    if (radSquats.element.hasClass("is-checked")){
+                        console.log("Inside squats");
+                        newSquats = parseInt(document.getElementById(txt.txtID).value);
+                        currSquats += newSquats;
+                        console.log(currSquats);
+                        //w.getSquatForUser(w.emailAddress);
+                        
+                        w.updateWorkout(data.Item.emailAddress, "squats",currSquats);
+                    }
+                    else if(radSteps.element.hasClass("is-checked")){
+                        console.log("Inside steps");
+                        newSteps = parseInt(document.getElementById(txt.txtID).value);
+                        currSteps += newSteps;
+                        
+                        w.updateWorkout(data.Item.emailAddress, "steps",currSteps);
+                    }
+                    else if(radPullUps.element.hasClass("is-checked")){
+                        console.log("Inside pullups");
+                        newPullUps = parseInt(document.getElementById(txt.txtID).value);
+                        currPullUps += newPullUps;
+                        
+                        w.updateWorkout(data.Item.emailAddress, "pullUps",currPullUps);
+                    }
+                    w.addSquats(currSquats);
+                    w.addSteps(currSteps);
+                    w.addPullUps(currPullUps);
+                    w.calculatePoints();
+                    w.updateWorkout(data.Item.emailAddress, "points",w.points); 
+                    
+                    application.dataService.addWorkout(w);
+                }
+                else {
+                    aataService.addWorkout(w);pplication.d
+                }
+
             }
-            else if(radSteps.element.hasClass("is-checked")){
-                console.log("Inside steps");
-                w.addSteps(document.getElementById(txt.txtID).value);
-            }
-            else if(radPullUps.element.hasClass("is-checked")){
-                console.log("Inside pullups");
-                w.addPullUps(document.getElementById(txt.txtID).value);
-            }
+            });
+            
+            
+            
            
-            w.points = w.calculatePoints();
+            
         
             //workouts.push({"emailAddress":"Melvin David","WorkoutDate":today,"squats":w.squats,"steps":w.steps,"pullUps":w.pullUps});
-            application.dataService.addWorkout(w);
+            
             
             
         });
+        let removeUserStyleString = 'width:100px; height: 80px;'
 
         let txtRemoveUser = new TextBox('txtRemoveUser');
         txtRemoveUser.setStyleString(styleString);
         txtRemoveUser.appendToElement(this.element);
+
+        // let dtRemoveUser = new DateTimePicker("Workout Date","dtRemoveUser");
+        // dtRemoveUser.setStyleString(styleString);
+        // dtRemoveUser.appendToElement(this.element);
+
         
 
         let btnRemoveUser = new Button('Remove User');
@@ -120,7 +182,7 @@ export class HomePage extends Page {
                 TableName:table,
                 Key:{
                     "emailAddress":emailAddress,
-                    "WorkoutDate": "12-5-2020"
+                    
                    
                 }
                 //ConditionExpression:"points <= :val",
@@ -135,7 +197,7 @@ export class HomePage extends Page {
                     //document.getElementById('textarea').innerHTML = "The conditional delete failed: " + "\n" + JSON.stringify(err, undefined, 2);
                 } else {
                     console.log(JSON.stringify(data));
-                    //document.getElementById('textarea').innerHTML = "The conditional delete succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+                    
                 }
             });
         });
@@ -145,6 +207,8 @@ export class HomePage extends Page {
 
 
     }
+
+    
 
     getElementString() {
         return '<div style="text-align: center;"></div>';

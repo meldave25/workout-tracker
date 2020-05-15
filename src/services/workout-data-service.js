@@ -59,9 +59,11 @@ export class WorkoutDataService {
                 };
             docClient.put(params, function(err, data) {
            if (err) {
-                   document.getElementById('textarea').innerHTML = "Unable to add item: " + "\n" + JSON.stringify(err, undefined, 2);
+                   console.log(err);
+                   //document.getElementById('textarea').innerHTML = "Unable to add item: " + "\n" + JSON.stringify(err, undefined, 2);
                 } else {
-                   document.getElementById('textarea').innerHTML = "PutItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+                   //document.getElementById('textarea').innerHTML = "PutItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2);
+                   console.log(JSON.stringify(data));
                }
             });
     
@@ -137,6 +139,8 @@ export class WorkoutDataService {
 
         return !hasErrors;
     }
+
+    
 
     
 
